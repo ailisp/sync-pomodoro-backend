@@ -12,6 +12,11 @@ const io = require('socket.io')(server, {
 
 let startedAt = null
 
+let timeOf = {
+  work: 25 * 60,
+  rest: 5 * 60,
+}
+
 let state = {
   started: false,
   status: 'work',
@@ -27,7 +32,8 @@ io.on('connection', (socket) => {
   socket.on('getState', () => {
     console.log('on getState')
     if (startedAt) {
-      state.remain = Math.round((new Date() - startedAt) / 1000)
+      state.remain =
+        timeOf[state.status] - Math.round((new Date() - startedAt) / 1000)
     }
     socket.emit('state', state)
   })
